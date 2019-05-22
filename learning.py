@@ -4,10 +4,8 @@ import burnolie
 import epsilon
 import effective_e
 import ucb
-import numpy as np
 import pylab
-import time
-
+import softmax
 def learning(algo,arms,horizon):
     x = [0.0] * horizon
     y = [0.0] * horizon
@@ -71,16 +69,19 @@ def compare_regret(arms,horizon,e):
     e = epsilon.e_greedy(len(arms),e)
     u = ucb.ucb(arms)
     ef = effective_e.e_effective_greedy(len(arms))
-    return(regret(e,arms,horizon),regret(u,arms,horizon),regret(ef,arms,horizon))
+    s = softmax.soft_max(len(arms))
+    return(regret(e,arms,horizon),regret(u,arms,horizon),regret(ef,arms,horizon),regret(s,arms,horizon))
 
 #the example to try out
 #y = [burnolie.bornoli(random.uniform(0,1))]*5
 #for i in range(0,4):
 #   y[i]=(burnolie.bornoli(random.uniform(0,1)))
 
-
+#s = softmax.soft_max(5)
 #e = epsilon.e_greedy(5,0.1)
 #u = ucb.ucb(y)
 #ef = effective_e.e_effective_greedy(5)
 #z = compare_regret(y,1000,0.1)
+#for i in range(0,4):
+#   print(y[i].p)
 #print(z)
