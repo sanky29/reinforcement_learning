@@ -1,6 +1,6 @@
 #import random library
 import random
-import numpy
+import math
 #define class to solve the question
 class e_greedy:
 
@@ -27,8 +27,3 @@ class e_greedy:
     def update(self, u, reward):
         self.nt[u] += 1
         self.value[u] = self.value[u] + (reward - self.value[u])/(self.nt[u])
-
-o = e_greedy(10,0.999999)
-o.update(9,8)
-o.update(o.select_arm(),9)
-print(o.value)

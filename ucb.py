@@ -6,18 +6,18 @@ class ucb:
 
     #define constructor
     def __init__(self,arms):
-
+        self.n = 0
         k = len(arms)
         # define one tracking one as
         self.track = [0.0] * k
 
         #initate the reward one
-        self.q = [0]*k
+        self.value = [0]*k
         for a in range(0,len(arms) -1):
-            self.q[a] = arms[a].p
-            self.track[a] = self.q[a]
+            self.value[a] = arms[a].p
+            self.track[a] = self.value[a]
         #define the number of trials
-        self.repeatation = [0]*k
+        self.nt = [0]*k
 
     #define method to select arm
     def select_arm(self):
@@ -27,9 +27,9 @@ class ucb:
 
     #define update method
     #it takes number of trials and arm
-    def update(self,i,n,reward):
-
+    def update(self,i,reward):
+        self.n =+ 1
         #just update the trak ans repeatation also update reward
-        self.repeatation[i] =self.repeatation[i] + 1
-        self.q[i] = self.q[i] + ((reward - self.q[i])/self.repeatation[i])
-        self.track[i] = self.q[i] + math.sqrt(2*math.log(n))/math.pow(self.repeatation[i],2)
+        self.nt[i] =self.nt[i] + 1
+        self.value[i] = self.value[i] + ((reward - self.value[i])/self.nt[i])
+        self.track[i] = self.value[i] + math.sqrt(2*math.log(self.n))/math.pow(self.nt[i],2)

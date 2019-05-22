@@ -4,57 +4,32 @@ import burnolie
 import epsilon
 import effective_e
 import ucb
+import numpy as np
 import pylab
 import time
 
-def learn_simple(arms, e, horizon):
-    algo =epsilon.e_greedy(len(arms),e)
+def learning(algo,arms,horizon):
     x = [0.0] * horizon
     y = [0.0] * horizon
-
-    for i in range(1,horizon-1):
+    for i in range(1, horizon - 1):
         l = algo.select_arm()
-        algo.update(l,arms[l].pull())
+        algo.update(l, arms[l].pull())
         x[i] = arms[l].p
         for t in algo.value:
             y[i] = y[i] + t
-    plt.plot(y,'r-')
-    plt.ylabel("expected payoff")
-    plt.xlabel("attempt")
-    plt.show()
-    return(algo.select_arm(), algo.nt[algo.select_arm()], arms[l].p)
 
-def learn_effective(arms, horizon):
-    algo =effective_e.e_effective_greedy(len(arms))
-    x = [0.0] * horizon
-    y = [0]*horizon
-    for i in range(1,horizon-1):
-        l = algo.select_arm()
-        algo.update(l,arms[l].pull())
-        x[i] = arms[l].p
-        for t in algo.value:
-            y[i] = y[i] + t
-    plt.plot(y,'r-')
-    plt.ylabel("expected payoff")
-    plt.xlabel("attempt")
-    plt.show()
-    return(algo.select_arm(), algo.nt[algo.select_arm()], arms[l].p)
+    plt.figure(1)
+    plt.plot( x, 'o-')
+    plt.title('Learning')
+    plt.ylabel('the action choosed')
 
-def learn_more_effective(arms, horizon):
-    algo =ucb.ucb(arms)
-    x = [0.0] * horizon
-    y = [0.0]*horizon
-    for i in range(1,horizon):
-        l = algo.select_arm()
-        algo.update(l,i,arms[l].pull())
-        x[i] = arms[l].p
-        for t in algo.q:
-            y[i] = y[i] + t
-    plt.plot(y,'r-')
-    plt.ylabel("expected payoff")
-    plt.xlabel("attempt")
+    plt.figure(2)
+    plt.plot(y, 'o-')
+    plt.title('Learning')
+    plt.ylabel('the sum of expected rewards')
+
     plt.show()
-    return(algo.select_arm(), algo.repeatation[algo.select_arm()],algo.q[algo.select_arm()], arms[l].p)
+    return (algo.select_arm(), algo.nt[algo.select_arm()], arms[l].p)
 
 def comparison_of_e(arms,horizon):
     algo1 = epsilon.e_greedy(len(arms), 0.1)
@@ -80,33 +55,7 @@ def comparison_of_e(arms,horizon):
     plt.xlabel("attempt")
     plt.show()
 
-def regret_ucb(arms,horizon):
-    algo = ucb.ucb(arms)
-    x = 0.0
-    z = 0.0
-    for i in range(0,len(arms) -1):
-        if (arms[i].p > z):
-            z = arms[i].p
-    for i in range(1, horizon):
-        l = algo.select_arm()
-        algo.update(l, i, arms[l].pull())
-        x = x + z - arms[l].p
-    return (x)
-def regret_egreedy(arms,horizon,e):
-    algo = epsilon.e_greedy(len(arms),e)
-    x = 0.0
-    z = 0.0
-    for i in range(0,len(arms) -1):
-        if (arms[i].p > z):
-            z = arms[i].p
-    for i in range(1, horizon):
-        l = algo.select_arm()
-        algo.update(l, arms[l].pull())
-        x = x + z - arms[l].p
-    return (x)
-
-def regret_effect(arms,horizon):
-    algo = effective_e.e_effective_greedy(len(arms))
+def regret(algo,arms,horizon):
     x = 0.0
     z = 0.0
     for i in range(0,len(arms) -1):
@@ -119,4 +68,19 @@ def regret_effect(arms,horizon):
     return (x)
 
 def compare_regret(arms,horizon,e):
-    return(regret_egreedy(arms,horizon,e),regret_effect(arms,horizon),  regret_ucb(arms,horizon))
+    e = epsilon.e_greedy(len(arms),e)
+    u = ucb.ucb(arms)
+    ef = effective_e.e_effective_greedy(len(arms))
+    return(regret(e,arms,horizon),regret(u,arms,horizon),regret(ef,arms,horizon))
+
+#the example to try out
+#y = [burnolie.bornoli(random.uniform(0,1))]*5
+#for i in range(0,4):
+#   y[i]=(burnolie.bornoli(random.uniform(0,1)))
+
+
+#e = epsilon.e_greedy(5,0.1)
+#u = ucb.ucb(y)
+#ef = effective_e.e_effective_greedy(5)
+#z = compare_regret(y,1000,0.1)
+#print(z)
