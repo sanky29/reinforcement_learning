@@ -14,7 +14,7 @@ class gradient:
             return(0)
 
     def update(self,i,reward):
-        self.t = self.t + reward*(i - self.t)
+        self.t = self.t + 0.3*reward*(i - self.t)
         self.pro[0] = 1 - self.t
         self.pro[1] = self.t
 
