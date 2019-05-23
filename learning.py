@@ -4,6 +4,7 @@ import burnolie
 import epsilon
 import effective_e
 import ucb
+import pi
 import policy_search
 import pylab
 import softmax
@@ -29,6 +30,27 @@ def learning(algo,arms,horizon):
 
     plt.show()
     return (algo.select_arm(), algo.nt[algo.select_arm()], arms[l].p)
+def learning2(algo,arms,horizon):
+    x = [0.0] * horizon
+    y = [0.0] * horizon
+    for i in range(1, horizon - 1):
+        l = algo.select_arm()
+        algo.update(l, arms[l].pull())
+        x[i] = algo.pro[0]
+        y[i] = algo.pro[1]
+
+    plt.figure(1)
+    plt.plot( x, 'o-')
+    plt.title('Learning')
+    plt.ylabel('the action choosed')
+
+    plt.figure(2)
+    plt.plot(y, 'o-')
+    plt.title('Learning')
+    plt.ylabel('the sum of expected rewards')
+
+    plt.show()
+    return (algo.select_arm(), algo.pro[0], algo.pro[1])
 
 def comparison_of_e(arms,horizon):
     algo1 = epsilon.e_greedy(len(arms), 0.1)
@@ -77,6 +99,8 @@ def compare_regret(arms,horizon,e):
 #y = [burnolie.bornoli(random.uniform(0,1))]*2
 #for i in range(0,2):
 #   y[i]=(burnolie.bornoli(random.uniform(0,1)))
+#g = pi.gradient(y)
+#z = learning2(g,y,100)
 #p = policy_search.ps(2,0.1,0)
 #s = softmax.soft_max(5)
 #e = epsilon.e_greedy(5,0.1)
@@ -84,7 +108,7 @@ def compare_regret(arms,horizon,e):
 #ef = effective_e.e_effective_greedy(5)
 #z = learning(p,y,100000)
 #z = compare_regret(y,1000,0.1)
-#print(p.track)
+#print(g.pro)
 #for i in range(0,2):
 #   print(y[i].p)
 #print(z)
