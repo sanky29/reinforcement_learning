@@ -13,8 +13,5 @@ class poisson:
 
     def get_pro(self,n):
         return(self.pro[n])
-d = poisson(2,10)
-print(d.pro)
-print(d.get_pro(10))
 
 
